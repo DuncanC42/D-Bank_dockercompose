@@ -12,6 +12,19 @@ services:
     environment:
       dock: "rabbit"
 
+  microservice-db-config:
+    extends :
+      service: network-deploy-service
+    image: mysql
+    healthcheck: # regarder sur internet pour avoir les healthcheck de chaque image
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 10
+      interval: 10s
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
   microservice-configserver-config:
     extends:
       service: microservice-base-config
@@ -22,3 +35,5 @@ services:
     environment:
       SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
       SPRING_PROFILES_ACTIVE: "default"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
