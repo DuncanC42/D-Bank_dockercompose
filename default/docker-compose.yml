@@ -119,7 +119,25 @@ services:
     environment:
       SPRING_APPLICATION_NAME: "loans"
       SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
 
+  loans1:
+    image: "shi2gami42/d-bank-loans:microservices"
+    container_name: loans-ms1
+    ports:
+      - "8091:8090"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      loansdb:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "loans"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
     extends:
       file: common-config.yml
       service: microservice-eureka-config
